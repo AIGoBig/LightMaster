@@ -87,14 +87,17 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
     });
     
-    // 高级功能显示/隐藏切换
-    toggleAdvanced.addEventListener('click', () => {
+    // 修改高级面板显示逻辑
+    function showAdvancedPanel() {
         if (advancedPanel.classList.contains('hidden')) {
             // 显示高级面板
             advancedPanel.classList.remove('hidden');
             setTimeout(() => {
                 advancedPanel.classList.add('visible');
                 document.querySelector('.arrow').classList.add('rotated');
+                // 允许高级面板滚动
+                advancedPanel.style.overflowY = 'auto';
+                advancedPanel.style.WebkitOverflowScrolling = 'touch';
             }, 10);
         } else {
             // 隐藏高级面板
@@ -104,6 +107,77 @@ document.addEventListener('DOMContentLoaded', () => {
                 advancedPanel.classList.add('hidden');
             }, 300);
         }
+    }
+    
+    // 修改提示容器的样式和位置
+    function updateTipsPosition() {
+        const tipsContainer = document.getElementById('tipsContainer');
+        const controls = document.querySelector('.controls');
+        const controlsHeight = controls.offsetHeight;
+        
+        // 将提示容器移到控制面板上方
+        tipsContainer.style.top = `${controlsHeight + 20}px`;
+        tipsContainer.style.zIndex = '1000'; // 确保提示在最上层
+    }
+    
+    // 监听窗口大小变化，更新提示位置
+    window.addEventListener('resize', updateTipsPosition);
+    
+    // 修改全屏控制函数
+    function toggleFullScreen() {
+        if (!document.fullscreenElement && 
+            !document.webkitFullscreenElement && 
+            !document.mozFullScreenElement && 
+            !document.msFullscreenElement) {
+            // 尝试进入全屏模式
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+                document.documentElement.msRequestFullscreen();
+            }
+            // 锁定屏幕方向为竖屏（如果支持）
+            if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('portrait').catch(err => {
+                    console.log('屏幕方向锁定失败:', err);
+                });
+            }
+        } else {
+            // 退出全屏
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+    }
+    
+    // 修改全屏按钮点击事件
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    fullscreenBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleFullScreen();
+    });
+    
+    // 修改高级功能按钮点击事件
+    toggleAdvanced.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        showAdvancedPanel();
+    });
+    
+    // 初始化时更新提示位置
+    document.addEventListener('DOMContentLoaded', () => {
+        updateTipsPosition();
+        // 其他初始化代码...
     });
     
     // 应用初始亮度和色温
@@ -401,35 +475,6 @@ document.addEventListener('DOMContentLoaded', () => {
         startVoiceRecognition();
         playClickEffect();
     });
-    
-    // 全屏切换功能
-    function toggleFullScreen() {
-        if (!document.fullscreenElement) {
-            // 尝试进入全屏模式
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.webkitRequestFullscreen) { /* Safari */
-                document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) {
-                document.documentElement.msRequestFullscreen();
-            }
-            // 锁定屏幕方向为竖屏（如果支持）
-            if (screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock('portrait').catch(err => {
-                    // 忽略错误，某些设备或浏览器可能不支持
-                });
-            }
-        } else {
-            // 退出全屏
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) { /* Safari */
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            }
-        }
-    }
     
     // 防止屏幕休眠
     let wakeLock = null;
@@ -1347,7 +1392,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function playAlarmEffect() {
         if (!settings.soundEffects) return;
         
-        const audio = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAsAABXoAAEBAkJDQ0SEhYWGxsfHyQkKCgtLTExNjY6Oj8/Q0NISDc3NztVVVpeTo5OTlJSV1dcXGBgZWVqam5udXV6en5+goKHh4uLj4+UlJiYjlVVVVWOjo6Ol5eXl5qampqenp6ep6enp6qqqqqu/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/P////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAULAAAAAAAAV6A7SWuJAAAAAAAAAAAAAAAAAAAA//tQZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETE1UMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVQ==');
+        const audio = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAsAABXoAAEBAkJDQ0SEhYWGxsfHyQkKCgtLTExNjY6Oj8/Q0NISDc3NztVVVpeTo5OTlJSV1dcXGBgZWVqam5udXV6en5+goKHh4uLj4+UlJiYjlVVVVWOjo6Ol5eXl5qampqenp6ep6enp6qqqqqu/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/P////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAULAAAAAAAAV6A7SWuJAAAAAAAAAAAAAAAAAAAA//tQZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETE1UMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVQ==');
         audio.play();
     }
     
@@ -1410,7 +1455,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 全屏控制
-    const fullscreenBtn = document.getElementById('fullscreenBtn');
     let isFullscreen = false;
 
     fullscreenBtn.addEventListener('click', () => {
@@ -1419,6 +1463,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.documentElement.requestFullscreen();
             } else if (document.documentElement.webkitRequestFullscreen) {
                 document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
             } else if (document.documentElement.msRequestFullscreen) {
                 document.documentElement.msRequestFullscreen();
             }
@@ -1434,6 +1480,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.exitFullscreen();
             } else if (document.webkitExitFullscreen) {
                 document.webkitExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
             } else if (document.msExitFullscreen) {
                 document.msExitFullscreen();
             }
