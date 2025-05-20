@@ -1,8 +1,8 @@
 {
-  "name": "高级手电筒",
-  "short_name": "手电筒",
-  "description": "一个功能强大的手电筒网页应用，支持亮度调节、色温控制、多种灯光模式和场景模式",
-  "start_url": "./index.html",
+  "name": "氛围光效",
+  "short_name": "氛围光效",
+  "description": "专业屏幕氛围灯应用，为您的空间创造独特的氛围光效",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
@@ -11,24 +11,22 @@
     {
       "src": "icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
       "src": "icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
   ],
   "screenshots": [
     {
-      "src": "screenshots/screen1.jpg",
+      "src": "screenshots/screenshot1.png",
       "sizes": "1080x1920",
-      "type": "image/jpeg"
+      "type": "image/png"
     }
   ],
-  "categories": ["utilities", "tools"],
+  "categories": ["lifestyle", "utilities"],
   "lang": "zh-CN",
   "dir": "ltr",
   "prefer_related_applications": false

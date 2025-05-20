@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 获取DOM元素 - 高级功能
     const toggleAdvanced = document.getElementById('toggleAdvanced');
     const advancedPanel = document.getElementById('advancedPanel');
+    const backToMain = document.getElementById('backToMain');
     const modeButtons = document.querySelectorAll('.mode-button');
     const colorFilters = document.querySelectorAll('.color-filter');
     const frequencySlider = document.getElementById('frequency');
@@ -88,13 +89,21 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 高级功能显示/隐藏切换
     toggleAdvanced.addEventListener('click', () => {
-        advancedPanel.classList.toggle('hidden');
-        
-        // 使用超时确保过渡动画可以正常工作
-        setTimeout(() => {
-            advancedPanel.classList.toggle('visible');
-            document.querySelector('.arrow').classList.toggle('rotated');
-        }, 10);
+        if (advancedPanel.classList.contains('hidden')) {
+            // 显示高级面板
+            advancedPanel.classList.remove('hidden');
+            setTimeout(() => {
+                advancedPanel.classList.add('visible');
+                document.querySelector('.arrow').classList.add('rotated');
+            }, 10);
+        } else {
+            // 隐藏高级面板
+            advancedPanel.classList.remove('visible');
+            document.querySelector('.arrow').classList.remove('rotated');
+            setTimeout(() => {
+                advancedPanel.classList.add('hidden');
+            }, 300);
+        }
     });
     
     // 应用初始亮度和色温
@@ -117,6 +126,13 @@ document.addEventListener('DOMContentLoaded', () => {
         updateLight();
         brightnessValue.textContent = `${brightnessSlider.value}%`;
         playToneEffect(brightnessSlider.value);
+        if (Math.random() < 0.3) { // 30%的概率显示提示
+            tipsContent.textContent = "调整亮度，找到最舒适的照明效果";
+            tipsContainer.classList.add('show');
+            setTimeout(() => {
+                tipsContainer.classList.remove('show');
+            }, 2000);
+        }
     });
     
     // 监听色温滑块变化
@@ -124,6 +140,13 @@ document.addEventListener('DOMContentLoaded', () => {
         updateLight();
         temperatureValue.textContent = `${temperatureSlider.value}K`;
         playClickEffect();
+        if (Math.random() < 0.3) { // 30%的概率显示提示
+            tipsContent.textContent = "调整色温，创造最适合你的氛围";
+            tipsContainer.classList.add('show');
+            setTimeout(() => {
+                tipsContainer.classList.remove('show');
+            }, 2000);
+        }
     });
     
     // 监听频率滑块变化
@@ -248,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     sceneBtn.addEventListener('click', () => {
-        openModal(sceneModal);
+        openSceneModal();
         playClickEffect();
     });
     
@@ -279,6 +302,16 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // 应用新场景
             applySceneMode(scene);
+            
+            // 显示场景应用提示
+            const tipIndex = sceneTips.findIndex(tip => tip.includes(scene));
+            if (tipIndex !== -1) {
+                tipsContent.textContent = sceneTips[tipIndex];
+                tipsContainer.classList.add('show');
+                setTimeout(() => {
+                    tipsContainer.classList.remove('show');
+                }, 2000);
+            }
             
             // 关闭模态框
             closeModal(sceneModal);
@@ -377,6 +410,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.documentElement.requestFullscreen();
             } else if (document.documentElement.webkitRequestFullscreen) { /* Safari */
                 document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+                document.documentElement.msRequestFullscreen();
             }
             // 锁定屏幕方向为竖屏（如果支持）
             if (screen.orientation && screen.orientation.lock) {
@@ -390,6 +425,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.exitFullscreen();
             } else if (document.webkitExitFullscreen) { /* Safari */
                 document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
             }
         }
     }
@@ -1361,4 +1398,171 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 初始化页面
     checkRemoteControl();
+
+    // 返回主界面按钮点击事件
+    backToMain.addEventListener('click', () => {
+        advancedPanel.classList.remove('visible');
+        document.querySelector('.arrow').classList.remove('rotated');
+        setTimeout(() => {
+            advancedPanel.classList.add('hidden');
+        }, 300);
+        playClickEffect();
+    });
+
+    // 全屏控制
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    let isFullscreen = false;
+
+    fullscreenBtn.addEventListener('click', () => {
+        if (!isFullscreen) {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+                document.documentElement.msRequestFullscreen();
+            }
+            isFullscreen = true;
+            fullscreenBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="none" d="M0 0h24v24H0z"/>
+                    <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" fill="currentColor"/>
+                </svg>
+            `;
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+            isFullscreen = false;
+            fullscreenBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="none" d="M0 0h24v24H0z"/>
+                    <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" fill="currentColor"/>
+                </svg>
+            `;
+        }
+    });
+
+    // 监听全屏变化
+    document.addEventListener('fullscreenchange', updateFullscreenState);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenState);
+    document.addEventListener('mozfullscreenchange', updateFullscreenState);
+    document.addEventListener('MSFullscreenChange', updateFullscreenState);
+
+    function updateFullscreenState() {
+        isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || 
+                         document.mozFullScreenElement || document.msFullscreenElement);
+        
+        // 更新全屏按钮图标
+        fullscreenBtn.innerHTML = isFullscreen ? `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                <path fill="none" d="M0 0h24v24H0z"/>
+                <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" fill="currentColor"/>
+            </svg>
+        ` : `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                <path fill="none" d="M0 0h24v24H0z"/>
+                <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" fill="currentColor"/>
+            </svg>
+        `;
+
+        // 根据全屏状态控制UI元素显示
+        const controls = document.querySelector('.controls');
+        const tipsContainer = document.getElementById('tipsContainer');
+        
+        if (isFullscreen) {
+            // 全屏模式下隐藏控制面板和提示
+            controls.style.display = 'none';
+            tipsContainer.style.display = 'none';
+        } else {
+            // 退出全屏时恢复显示
+            controls.style.display = 'block';
+            tipsContainer.style.display = 'block';
+        }
+    }
+
+    // 页面加载完成后自动显示场景选择模态框
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(openSceneModal, 500);
+    });
+
+    // 提示信息
+    const tips = [
+        "放下手机，打开氛围光效，享受片刻宁静",
+        "选择一个喜欢的场景，让光效陪伴你的时光",
+        "调整色温，创造最适合你的氛围",
+        "试试语音控制，解放双手",
+        "设置定时器，让光效在合适的时间自动关闭",
+        "分享给朋友，一起创造美好氛围",
+        "尝试不同的场景模式，发现更多可能",
+        "调整亮度，找到最舒适的照明效果",
+        "使用滤镜，为空间增添独特色彩",
+        "全屏模式，获得最佳体验"
+    ];
+    
+    const tipsContainer = document.getElementById('tipsContainer');
+    const tipsContent = document.getElementById('tipsContent');
+    let currentTipIndex = 0;
+    
+    function showTip() {
+        tipsContent.textContent = tips[currentTipIndex];
+        tipsContainer.classList.add('show');
+        
+        // 3秒后隐藏提示
+        setTimeout(() => {
+            tipsContainer.classList.remove('show');
+            // 更新下一个提示索引
+            currentTipIndex = (currentTipIndex + 1) % tips.length;
+        }, 3000);
+    }
+    
+    // 页面加载时显示第一个提示
+    setTimeout(showTip, 1000);
+    
+    // 每30秒显示一次新提示
+    setInterval(showTip, 30000);
+
+    // 场景选择提示
+    const sceneTips = [
+        "选择一个场景，让光效陪伴你的时光",
+        "烛光模式：温暖柔和的氛围",
+        "篝火模式：模拟篝火的温暖跳动",
+        "彩虹模式：缓慢变换的彩虹色彩",
+        "警灯模式：红蓝交替闪烁效果",
+        "闪电模式：模拟雷暴天气效果",
+        "夜灯模式：柔和的夜间照明",
+        "日落模式：温暖的橙红色渐变",
+        "派对模式：多彩快速闪烁效果"
+    ];
+
+    // 修改场景模态框显示逻辑
+    function openSceneModal() {
+        const sceneModal = document.getElementById('sceneModal');
+        sceneModal.classList.add('active');
+        
+        // 显示场景选择提示
+        tipsContent.textContent = sceneTips[0];
+        tipsContainer.classList.add('show');
+        
+        // 监听场景卡片悬停
+        const sceneCards = document.querySelectorAll('.scene-card');
+        sceneCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                const scene = card.getAttribute('data-scene');
+                const tipIndex = sceneTips.findIndex(tip => tip.includes(scene));
+                if (tipIndex !== -1) {
+                    tipsContent.textContent = sceneTips[tipIndex];
+                    tipsContainer.classList.add('show');
+                }
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                tipsContainer.classList.remove('show');
+            });
+        });
+    }
 }); 
