@@ -1,0 +1,1116 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", Arial, sans-serif;
+}
+
+:root {
+    --ios-blue: #007aff;
+    --ios-background: #f2f2f7;
+    --ios-secondary-background: #ffffff;
+    --ios-gray: #8e8e93;
+    --ios-border: rgba(0, 0, 0, 0.1);
+    --ios-green: #34c759;
+    --ios-red: #ff3b30;
+    --ios-orange: #ff9500;
+    --ios-yellow: #ffcc00;
+    --ios-purple: #af52de;
+    --ios-pink: #ff2d55;
+    --ios-teal: #5ac8fa;
+    --transition-time: 0.3s;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #000;
+    color: #fff;
+    touch-action: none;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.light-source {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background-color: #fff;
+}
+
+/* 浮动控制按钮 */
+.floating-controls {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.floating-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: none;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.floating-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    z-index: 2;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+    transition: all 0.3s ease;
+}
+
+.control-group {
+    margin-bottom: 20px;
+}
+
+.control-group:last-child {
+    margin-bottom: 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+}
+
+.slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.2);
+    outline: none;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 30px;
+    height: 30px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.slider::-moz-range-thumb {
+    width: 30px;
+    height: 30px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+/* 高亮模式下的滑块样式 */
+.high-light .slider {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.high-light .slider::-webkit-slider-thumb {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+.high-light .slider::-moz-range-thumb {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+.value-display {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* 针对不同亮度级别的颜色 */
+.low-light {
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.high-light {
+    color: #000;
+    background-color: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 -5px 15px rgba(255, 255, 255, 0.3);
+}
+
+/* 高级功能区域样式 */
+.advanced-features {
+    margin-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    padding-top: 20px;
+}
+
+.toggle-button {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.high-light .toggle-button {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #000;
+}
+
+.toggle-button:active {
+    opacity: 0.7;
+}
+
+.arrow {
+    transition: transform 0.3s ease;
+}
+
+.arrow.rotated {
+    transform: rotate(180deg);
+}
+
+.advanced-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+    opacity: 0;
+}
+
+.advanced-panel.visible {
+    max-height: 3000px;
+    opacity: 1;
+    padding-top: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+.mode-group, .filter-group, .battery-info, .timer-group, .scene-group, .remote-control, .actions-group {
+    margin-bottom: 25px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.high-light .mode-group,
+.high-light .filter-group,
+.high-light .battery-info,
+.high-light .timer-group,
+.high-light .scene-group,
+.high-light .remote-control,
+.high-light .actions-group {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.mode-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 15px;
+}
+
+.high-light .mode-title {
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.mode-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.mode-button {
+    flex: 1;
+    min-width: calc(50% - 5px);
+    padding: 10px 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mode-button.active {
+    background-color: var(--ios-blue);
+}
+
+.high-light .mode-button {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #000;
+}
+
+.high-light .mode-button.active {
+    background-color: var(--ios-blue);
+    color: #fff;
+}
+
+.frequency-control {
+    margin-top: 15px;
+}
+
+.mini-slider {
+    height: 20px;
+}
+
+.mini-slider::-webkit-slider-thumb {
+    width: 22px;
+    height: 22px;
+}
+
+.mini-slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+}
+
+.mini-value {
+    font-size: 12px;
+}
+
+.color-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+}
+
+.color-filter {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.color-filter.active {
+    border-color: var(--ios-blue);
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.battery-container {
+    height: 30px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.high-light .battery-container {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.battery-level {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    width: 0%;
+    transition: width 1s ease;
+    border-radius: 15px;
+}
+
+.battery-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+}
+
+.high-light .battery-text {
+    color: #000;
+}
+
+.battery-estimate {
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.high-light .battery-estimate {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+/* 闪烁和SOS动画 */
+@keyframes strobe {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+@keyframes pulse {
+    0% { opacity: 0.2; }
+    50% { opacity: 1; }
+    100% { opacity: 0.2; }
+}
+
+@keyframes sos {
+    /* S - 短闪3次 */
+    0%, 2%, 4% { opacity: 1; }
+    1%, 3%, 5% { opacity: 0; }
+    
+    /* 短暂暂停 */
+    6%, 10% { opacity: 0; }
+    
+    /* O - 长闪3次 */
+    11%, 17%, 23% { opacity: 1; }
+    18%, 24%, 30% { opacity: 0; }
+    
+    /* 短暂暂停 */
+    31%, 35% { opacity: 0; }
+    
+    /* S - 短闪3次 */
+    36%, 38%, 40% { opacity: 1; }
+    37%, 39%, 41% { opacity: 0; }
+    
+    /* 长暂停 */
+    42%, 100% { opacity: 0; }
+}
+
+.strobe-active {
+    animation: strobe 0.2s infinite;
+}
+
+.pulse-active {
+    animation: pulse 2s infinite;
+}
+
+.sos-active {
+    animation: sos 10s infinite;
+}
+
+/* 媒体查询，确保在不同设备上的适配 */
+@media (max-height: 600px) {
+    .controls {
+        padding-top: 15px;
+        padding-bottom: calc(15px + env(safe-area-inset-bottom));
+    }
+    
+    .control-group {
+        margin-bottom: 15px;
+    }
+    
+    label {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+    
+    .advanced-features {
+        margin-top: 15px;
+        padding-top: 15px;
+    }
+    
+    .mode-group, .filter-group, .battery-info {
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+}
+
+/* 增加对暗模式的支持 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ios-blue: #0a84ff;
+        --ios-background: #1c1c1e;
+        --ios-secondary-background: #2c2c2e;
+        --ios-gray: #8e8e93;
+        --ios-border: rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* 定时器样式 */
+.timer-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.timer-controls {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.timer-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.high-light .timer-btn {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #000;
+}
+
+.timer-input {
+    width: 50px;
+    height: 36px;
+    background: transparent;
+    border: none;
+    text-align: center;
+    font-size: 18px;
+    color: #fff;
+    -moz-appearance: textfield;
+}
+
+.timer-input::-webkit-outer-spin-button,
+.timer-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.high-light .timer-input {
+    color: #000;
+}
+
+.timer-unit {
+    margin-right: auto;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.high-light .timer-unit {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.action-btn {
+    padding: 8px 15px;
+    border-radius: 18px;
+    border: none;
+    background-color: var(--ios-blue);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.action-btn:active {
+    opacity: 0.8;
+}
+
+.timer-progress {
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 5px;
+}
+
+.timer-bar {
+    height: 100%;
+    width: 0%;
+    background-color: var(--ios-blue);
+    border-radius: 3px;
+    transition: width 1s linear;
+}
+
+.timer-text {
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 5px;
+}
+
+.high-light .timer-text {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+/* 场景按钮 */
+.scene-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.scene-button {
+    width: 60px;
+    height: 70px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.high-light .scene-button {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.scene-button:active {
+    transform: scale(0.95);
+}
+
+.scene-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.scene-name {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.high-light .scene-name {
+    color: rgba(0, 0, 0, 0.9);
+}
+
+/* 远程控制区域 */
+.qr-container {
+    width: 150px;
+    height: 150px;
+    background-color: #fff;
+    margin: 0 auto 15px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.qr-loading {
+    color: #000;
+    font-size: 14px;
+}
+
+.qr-code {
+    width: 100%;
+    height: 100%;
+}
+
+.qr-text {
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+}
+
+.high-light .qr-text {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+/* 快速操作按钮 */
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.action-buttons .action-btn {
+    flex: 1;
+    min-width: calc(33.33% - 7px);
+}
+
+/* 模态框样式 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 10;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    background-color: var(--ios-background);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transform: translateY(30px);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.modal.active .modal-content {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.modal-header {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--ios-border);
+    background-color: var(--ios-secondary-background);
+}
+
+.modal-header h3 {
+    color: #000;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.close-btn {
+    width: 30px;
+    height: 30px;
+    background: none;
+    border: none;
+    color: var(--ios-gray);
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    max-height: calc(80vh - 60px);
+    color: #000;
+}
+
+/* 语音控制样式 */
+.voice-animation {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 20px;
+}
+
+.voice-bar {
+    width: 8px;
+    height: 5px;
+    background-color: var(--ios-blue);
+    border-radius: 3px;
+    transition: height 0.2s ease;
+}
+
+.voice-animation.active .voice-bar {
+    animation: voice-wave 1.2s infinite ease-in-out;
+}
+
+.voice-animation.active .voice-bar:nth-child(1) { animation-delay: 0.0s; }
+.voice-animation.active .voice-bar:nth-child(2) { animation-delay: 0.2s; }
+.voice-animation.active .voice-bar:nth-child(3) { animation-delay: 0.4s; }
+.voice-animation.active .voice-bar:nth-child(4) { animation-delay: 0.2s; }
+.voice-animation.active .voice-bar:nth-child(5) { animation-delay: 0.0s; }
+
+@keyframes voice-wave {
+    0%, 100% { height: 5px; }
+    50% { height: 40px; }
+}
+
+.voice-status {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+.voice-tips {
+    background-color: var(--ios-background);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.voice-tips p {
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.voice-tips ul {
+    padding-left: 20px;
+}
+
+.voice-tips li {
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: var(--ios-gray);
+}
+
+.primary-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--ios-blue);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.primary-btn:active {
+    background-color: #0062cc;
+}
+
+.secondary-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--ios-blue);
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.secondary-btn:active {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 场景卡片 */
+.scene-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.scene-card {
+    background-color: var(--ios-secondary-background);
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.scene-card:active {
+    transform: scale(0.97);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.scene-card-icon {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.scene-card-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #000;
+}
+
+.scene-card-desc {
+    font-size: 12px;
+    color: var(--ios-gray);
+    text-align: center;
+    line-height: 1.4;
+}
+
+/* 设置界面 */
+.settings-group {
+    margin-bottom: 25px;
+}
+
+.settings-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--ios-border);
+}
+
+.settings-item:last-child {
+    border-bottom: none;
+}
+
+.settings-label {
+    font-size: 16px;
+    color: #000;
+}
+
+.toggle-switch {
+    position: relative;
+    width: 50px;
+    height: 30px;
+}
+
+.toggle-checkbox {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.toggle-label:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+    background-color: var(--ios-blue);
+}
+
+.toggle-checkbox:checked + .toggle-label:before {
+    transform: translateX(20px);
+}
+
+.settings-select {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--ios-border);
+    background-color: var(--ios-secondary-background);
+    color: #000;
+    font-size: 14px;
+    width: 120px;
+}
+
+.about-section {
+    padding-top: 20px;
+    border-top: 1px solid var(--ios-border);
+}
+
+.about-section h4 {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #000;
+}
+
+.about-section p {
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #000;
+}
+
+.app-desc {
+    color: var(--ios-gray);
+    margin-bottom: 15px;
+}
+
+/* Toast 消息 */
+.toast {
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 25px;
+    font-size: 14px;
+    z-index: 9999;
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+/* 烛光效果 */
+@keyframes candle {
+    0%, 100% { opacity: 0.8; transform: scale(1.0); }
+    25% { opacity: 0.9; transform: scale(0.98); }
+    50% { opacity: 0.8; transform: scale(1.0); }
+    75% { opacity: 0.7; transform: scale(1.02); }
+}
+
+/* 篝火效果 */
+@keyframes campfire {
+    0% { opacity: 0.7; transform: scale(0.98); }
+    25% { opacity: 0.9; transform: scale(1.02); }
+    50% { opacity: 0.8; transform: scale(0.99); }
+    75% { opacity: 1.0; transform: scale(1.01); }
+    100% { opacity: 0.7; transform: scale(0.98); }
+}
+
+/* 警灯效果 */
+@keyframes police {
+    0%, 33% { background-color: #ff0000; }
+    34%, 66% { background-color: #0000ff; }
+    67%, 100% { background-color: #ff0000; }
+}
+
+.candle-active {
+    animation: candle 3s infinite;
+    background-color: #ffb84d !important;
+}
+
+.campfire-active {
+    animation: campfire 2s infinite;
+    background-color: #ff7b25 !important;
+}
+
+.police-active {
+    animation: police 1s infinite;
+}
+
+/* 媒体查询，确保在不同设备上的适配 */
+@media (max-height: 700px) {
+    .controls {
+        padding-top: 15px;
+        padding-bottom: calc(15px + env(safe-area-inset-bottom));
+    }
+    
+    .control-group {
+        margin-bottom: 15px;
+    }
+    
+    label {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+    
+    .advanced-features {
+        margin-top: 15px;
+        padding-top: 15px;
+    }
+    
+    .mode-group, .filter-group, .battery-info, .timer-group, .scene-group, .remote-control, .actions-group {
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .scene-button {
+        width: 50px;
+        height: 60px;
+    }
+    
+    .scene-icon {
+        font-size: 20px;
+    }
+    
+    .scene-name {
+        font-size: 10px;
+    }
+}
+
+/* 增加对暗模式的支持 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ios-blue: #0a84ff;
+        --ios-background: #1c1c1e;
+        --ios-secondary-background: #2c2c2e;
+        --ios-gray: #8e8e93;
+        --ios-border: rgba(255, 255, 255, 0.1);
+    }
+    
+    .modal-header h3, .modal-body, .settings-label, .scene-card-title, .about-section h4, .about-section p {
+        color: #fff;
+    }
+    
+    .voice-status {
+        color: #fff;
+    }
+    
+    .qr-loading {
+        color: #000;
+    }
+} 
