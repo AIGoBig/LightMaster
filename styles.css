@@ -729,7 +729,7 @@ label {
 }
 
 .modal-header h3 {
-    color: #000;
+    color: #fff;
     font-size: 18px;
     font-weight: 600;
     margin: 0;
@@ -749,7 +749,7 @@ label {
     padding: 20px;
     overflow-y: auto;
     max-height: calc(80vh - 60px);
-    color: #000;
+    color: #fff;
 }
 
 /* 语音控制样式 */
@@ -912,7 +912,7 @@ label {
 
 .settings-label {
     font-size: 16px;
-    color: #000;
+    color: #fff;
 }
 
 .toggle-switch {
@@ -963,8 +963,8 @@ label {
     padding: 8px 10px;
     border-radius: 8px;
     border: 1px solid var(--ios-border);
-    background-color: var(--ios-secondary-background);
-    color: #000;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
     font-size: 14px;
     width: 120px;
 }
@@ -977,17 +977,17 @@ label {
 .about-section h4 {
     margin-bottom: 10px;
     font-size: 16px;
-    color: #000;
+    color: #fff;
 }
 
 .about-section p {
     margin-bottom: 5px;
     font-size: 14px;
-    color: #000;
+    color: #fff;
 }
 
 .app-desc {
-    color: var(--ios-gray);
+    color: rgba(255, 255, 255, 0.7);
     margin-bottom: 15px;
 }
 
@@ -1294,4 +1294,38 @@ label {
 
 #advancedPanel.visible {
     transform: translateY(0);
+}
+
+/* 深色模式样式 */
+@media (prefers-color-scheme: dark) {
+    .modal-content {
+        background: rgba(0, 0, 0, 0.9);
+    }
+    
+    .settings-select {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+}
+
+/* 高亮模式样式 */
+.high-light-mode .modal-content {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.high-light-mode .modal-header h3,
+.high-light-mode .modal-body,
+.high-light-mode .settings-label,
+.high-light-mode .about-section h4,
+.high-light-mode .about-section p {
+    color: #000;
+}
+
+.high-light-mode .settings-select {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #000;
+}
+
+.high-light-mode .app-desc {
+    color: rgba(0, 0, 0, 0.7);
 } 

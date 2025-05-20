@@ -77,6 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // 从localStorage加载设置
     loadSettings();
     
+    // 检测功能可用性并隐藏不可用的功能
+    checkFeaturesAvailability();
+    
     // 禁止双击缩放
     document.addEventListener('dblclick', (e) => {
         e.preventDefault();
@@ -184,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateLight();
     
     // 初始化电池状态
-    if (settings.batteryInfo) {
+    if (settings.batteryInfo && 'getBattery' in navigator) {
         initBatteryStatus();
     }
     
@@ -875,12 +878,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 battery.addEventListener('levelchange', () => updateBatteryInfo(battery));
                 battery.addEventListener('chargingchange', () => updateBatteryInfo(battery));
             } else {
-                batteryText.textContent = '电池信息不可用';
-                batteryEstimate.textContent = '不支持电池API';
+                console.log('电池API不可用');
+                // 不显示错误信息，而是隐藏整个电池信息区域
+                const batteryInfoSection = document.querySelector('.battery-info');
+                if (batteryInfoSection) {
+                    batteryInfoSection.style.display = 'none';
+                }
             }
         } catch (err) {
-            batteryText.textContent = '电池信息不可用';
-            batteryEstimate.textContent = '获取电池信息时出错';
+            console.error('获取电池信息失败:', err);
+            // 隐藏电池信息区域而不是显示错误
+            const batteryInfoSection = document.querySelector('.battery-info');
+            if (batteryInfoSection) {
+                batteryInfoSection.style.display = 'none';
+            }
         }
     }
     
@@ -1257,34 +1268,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 生成QR码（简易实现 - 使用外部库）
     function generateQRCode() {
-        const qrLoading = document.getElementById('qrLoading');
-        const qrCode = document.getElementById('qrCode');
-        
-        if (!window.QRCode) {
-            qrLoading.textContent = '加载QR库失败';
-            return;
-        }
-        
-        try {
-            qrLoading.style.display = 'none';
-            qrCode.style.display = 'block';
-            
-            // 获取当前页面URL加控制参数
-            const controlUrl = `${window.location.href.split('?')[0]}?remote=1`;
-            
-            // 生成二维码
-            new QRCode(qrCode, {
-                text: controlUrl,
-                width: 150,
-                height: 150,
-                colorDark: '#000',
-                colorLight: '#fff',
-                correctLevel: QRCode.CorrectLevel.L
-            });
-        } catch (err) {
-            qrLoading.textContent = '生成二维码失败';
-            console.error(err);
-        }
+        // 功能保留但不启用
+        console.log('远程控制功能已禁用');
     }
     
     // 分享功能
@@ -1329,14 +1314,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function installApp() {
         if (!deferredPrompt) {
-            showToast('应用已安装或不支持安装');
+            // 显示友好提示而不是错误
+            showToast('此设备或浏览器不支持应用安装');
             return;
         }
         
-        // 显示安装提示
+        // 如果支持，则显示安装提示
         deferredPrompt.prompt();
         
-        // 等待用户响应提示
         deferredPrompt.userChoice.then((choiceResult) => {
             if (choiceResult.outcome === 'accepted') {
                 showToast('应用安装成功');
@@ -1392,7 +1377,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function playAlarmEffect() {
         if (!settings.soundEffects) return;
         
-        const audio = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAsAABXoAAEBAkJDQ0SEhYWGxsfHyQkKCgtLTExNjY6Oj8/Q0NISDc3NztVVVpeTo5OTlJSV1dcXGBgZWVqam5udXV6en5+goKHh4uLj4+UlJiYjlVVVVWOjo6Ol5eXl5qampqenp6ep6enp6qqqqqu/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/P////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAULAAAAAAAAV6A7SWuJAAAAAAAAAAAAAAAAAAAA//tQZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETE1UMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVQ==');
+        const audio = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAsAABXoAAEBAkJDQ0SEhYWGxsfHyQkKCgtLTExNjY6Oj8/Q0NISDc3NztVVVpeTo5OTlJSV1dcXGBgZWVqam5udXV6en5+goKHh4uLj4+UlJiYjlVVVVWOjo6Ol5eXl5qampqenp6ep6enp6qqqqqu/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/P////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAULAAAAAAAAV6A7SWuJAAAAAAAAAAAAAAAAAAAA//tQZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETE1UMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVQ==');
         audio.play();
     }
     
@@ -1433,12 +1418,8 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.controls').style.display = 'none';
             document.querySelector('.floating-controls').style.display = 'none';
             showToast('远程控制模式');
-        } else {
-            // 初始化远程控制二维码
-            if (window.QRCode) {
-                setTimeout(generateQRCode, 1000);
-            }
         }
+        // 不再生成QR码
     }
     
     // 初始化页面
@@ -1534,9 +1515,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 页面加载完成后自动显示场景选择模态框
-    document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(openSceneModal, 500);
-    });
+    setTimeout(openSceneModal, 500);
 
     // 提示信息
     const tips = [
@@ -1612,5 +1591,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 tipsContainer.classList.remove('show');
             });
         });
+    }
+
+    // 修改功能可用性检测函数
+    function checkFeaturesAvailability() {
+        // 处理电池信息功能
+        const batteryInfoSection = document.querySelector('.battery-info');
+        if (batteryInfoSection) {
+            if (!('getBattery' in navigator)) {
+                // 如果不支持电池API，隐藏电池信息区域
+                batteryInfoSection.style.display = 'none';
+                
+                // 同时隐藏设置中的电池信息选项
+                const batteryInfoItem = document.querySelector('.settings-item');
+                if (batteryInfoItem && batteryInfoItem.querySelector('#batteryInfoToggle')) {
+                    batteryInfoItem.style.display = 'none';
+                }
+            }
+        }
+        
+        // 处理远程控制功能
+        const remoteControlSection = document.querySelector('.remote-control');
+        if (remoteControlSection) {
+            // 隐藏远程控制区域
+            remoteControlSection.style.display = 'none';
+        }
+        
+        // 处理安装应用功能
+        const installBtn = document.getElementById('installBtn');
+        if (installBtn) {
+            // 默认隐藏安装按钮，只有在收到beforeinstallprompt事件时才显示
+            installBtn.style.display = 'none';
+        }
     }
 }); 
